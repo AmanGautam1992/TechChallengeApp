@@ -1,0 +1,9 @@
+namerg             = "techchallenegaman-rg"
+locationrg         = "West Europe"
+pgsqlservername    = "techchallenegamanpgserver"
+pgsqldbname        = "techchallenegamanpgdb"
+pgsqldbfwrule      = "techchallenegamanpgdbfwrule"
+cluster_name       = "techchallenegaman-aks"
+kubernetes_version = "1.19.6"
+system_node_count  = 3
+acr_name           = "techchallenegamanacr"
