@@ -32,3 +32,13 @@ variable "acr_name" {
   type        = string
   description = "ACR name"
 }
+
+variable "psql_admin_username" {
+  type        = string
+  description = "psql admin username"
+}
+
+variable "psql_admin_password" {
+  type        = string
+  description = "psql admin password"
+}

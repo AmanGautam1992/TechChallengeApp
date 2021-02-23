@@ -13,8 +13,8 @@ resource "azurerm_postgresql_server" "techchallengepgserver" {
   geo_redundant_backup_enabled = false
   auto_grow_enabled            = true
 
-  administrator_login          = "psqladminun"
-  administrator_login_password = "__techchallenegamanDbPwd__"
+  administrator_login          = var.psql_admin_username
+  administrator_login_password = var.psql_admin_password
   version                      = "9.5"
   ssl_enforcement_enabled      = true
 }
