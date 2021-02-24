@@ -68,5 +68,5 @@ steps:
     inputs:
       command: apply
       workingDirectory: '$(Pipeline.Workspace)/terraform'
-      commandOptions: '-auto-approve'
+      commandOptions: '-auto-approve -lock=false'
       environmentServiceNameAzureRM: 'visual-studio-professional-azure-service-connection'
