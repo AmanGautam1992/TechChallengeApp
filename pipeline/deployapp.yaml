@@ -13,4 +13,3 @@ steps:
     azureSubscriptionEndpointForSecrets: 'visual-studio-professional-azure-service-connection'
     azureContainerRegistry: '${{parameters.acrname}}'
     secretName: acrsecret
-    versionSpec: 1.7.0
