@@ -16,7 +16,7 @@ resource "azurerm_postgresql_server" "techchallengepgserver" {
   administrator_login          = var.psql_admin_username
   administrator_login_password = var.psql_admin_password
   version                      = "9.5"
-  ssl_enforcement_enabled      = true
+  ssl_enforcement_enabled      = false
 }
 resource "azurerm_postgresql_database" "techchallengepgdb" {
   name                = var.pgsqlservername
