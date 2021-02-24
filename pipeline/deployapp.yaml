@@ -1,0 +1,16 @@
+parameters:
+  - name: acrname
+    type: string
+
+steps:
+- task: Kubernetes@1
+  displayName: 'kubectl apply'
+  inputs:
+    kubernetesServiceEndpoint: 'techchallenge-app-aks-service-connection'
+    command: apply
+    useConfigurationFile: true
+    configuration: '$(Pipeline.Workspace)/pipeline/aksmanifest.yaml'
+    azureSubscriptionEndpointForSecrets: 'visual-studio-professional-azure-service-connection'
+    azureContainerRegistry: '${{parameters.acrname}}'
+    secretName: acrsecret
+    versionSpec: 1.7.0

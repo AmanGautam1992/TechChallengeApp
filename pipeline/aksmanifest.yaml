@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: techchallengeapp-aks
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: techchallengeapp-aks
+  template:
+    metadata:
+      labels:
+        app: techchallengeapp-aks
+    spec:
+      nodeSelector:
+        "beta.kubernetes.io/os": linux
+      imagePullSecrets:
+       - name: acrsecret
+      containers:
+      - name: techchallengeapp-aks
+        image: techchallenegamanacr.azurecr.io/techchallengerepo:latest
+        resources:
+          requests:
+            cpu: 100m
+            memory: 128Mi
+          limits:
+            cpu: 250m
+            memory: 256Mi
+        ports:
+        - containerPort: 3000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: techchallengeapp-aks
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 3000
+  selector:
+    app: techchallengeapp-aks 

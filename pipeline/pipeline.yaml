@@ -47,3 +47,34 @@ stages:
             parameters:
               tfStorageAccountRG: $(tfStorageAccountRG)
               tfStorageAccount: $(tfStorageAccount)
+
+- stage: BuildApp
+  displayName: 'Build the app and push the image to acr'
+
+  jobs:
+  - job: 'Linux'
+    displayName: BuildAppAndPublish
+    pool:
+      vmImage: 'ubuntu-latest'
+
+    workspace:
+        clean: all
+
+    steps:
+     - template: 'build.yaml'
+
+- stage: DeployApp
+  displayName: 'App Deployment'
+  dependsOn: BuildApp
+  jobs:
+  - deployment: app_deployment
+    pool:
+      vmImage: 'ubuntu-latest'
+    environment: app_deployment
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - template: 'deployapp.yaml'
+            parameters:
+              acrname: $(techChallengeACR)
