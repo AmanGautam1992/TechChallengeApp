@@ -60,6 +60,7 @@ steps:
     inputs:
       command: plan
       workingDirectory: '$(Pipeline.Workspace)/terraform'
+      commandOptions: '-lock=false'
       environmentServiceNameAzureRM: 'visual-studio-professional-azure-service-connection'
 
   - task: ms-devlabs.custom-terraform-tasks.custom-terraform-release-task.TerraformTaskV1@0
