@@ -7,9 +7,6 @@ variable "locationrg" {
 variable "pgsqlservername" {
   type    = string
 }
-variable "pgsqldbname" {
-  type    = string
-}
 variable "pgsqldbfwrule" {
   type    = string
 }
