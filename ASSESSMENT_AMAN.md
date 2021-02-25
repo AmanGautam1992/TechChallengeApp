@@ -11,13 +11,21 @@ The connection is not secure, as, I don't have any ssl certificate to bind.
  1. You should have a git repository to store the application code, IAC and pipeline yaml. 
  2. You should have an valid Azure Account
  3. You should have an Azure DevOps subscription to deploy the solution.
- 
+
 
  ## Azure-pipeline details
 
- Multistage azure devops yaml pipeline is used to depoly the infrastructure along with the build and deployment of the techchallenge application into AKS. The pipeline looks like below,
+ Multistage azure devops yaml pipeline is used to depoly the infrastructure along with the build and deployment of the techchallenge application into AKS. 
+
+ * pipeline yaml is store in `pipeline` folder in the repository.
+ * terraform files are stored in `iac` folder in the repository.
+
+ The pipeline looks like below.
 
  ![pipeline](/doc/images/techchallengepipeline.JPG)
+
+* Terraform files are stored in `iac` folder in repository.
+* Pipeline yamls are stored in `pipeline` folder in repository.
 
  ### The architecture diagram of deployment looks like below
 
@@ -27,6 +35,12 @@ The connection is not secure, as, I don't have any ssl certificate to bind.
 
 *  Stage `Terraform file publish `: Publish the terraform files as artifact for the deployment
 *  Stage `Infra Deployment`: Terraform IAC deployment in azure
+
+##### Azure resources created after IAC pipeline run
+
+![Azure techchallenge rg](/doc/images/techchallenge-azure-rg.JPG)
+
+![Azure AKS configuration rg](/doc/images/aks_configuration_rg.JPG)
 
  #### App build and deployment pipeline
 
@@ -72,9 +86,23 @@ The connection is not secure, as, I don't have any ssl certificate to bind.
 
 ![AKS node pool for tech challenge AKS](/doc/images/techchallengeapp-aman.JPG)
 
+
+## Security
+
+* NSG is in place for AKS where all the call are blocked except for the inbound calls for loadbalancer ip. Please refer to the screenshot below for more details:
+
+![AKS NSG](/doc/images/aks-nsg-rule.JPG)
+
+* Configured the postgress sql server's firewall to accept connections only from Azure resources.
+* Suggestion: Ip restriction firewall rule can be placed on Postgress sql server. This is specified in the azure sql postgress server `azurerm_postgresql_server` in `main.tf`
+* We are not storing any acr credential in the repository and the authentication is being done azure-devops service-principle, however, a user-assigned manage identity can be created and assigned to acr identity with `ACR Pull` role to to authenticate to acr. 
+* Private endpoints can also be used for secure connection, but acr is required to be on `Premium SKU`
+
 ## Github branching strategy practice followed.
 
  * Branch restriction policy has been applied to prevent direct commits to `master` branch.
  * For the Pull Requests github checks has been enabled to check the build status. Please refer to the screen shot below for the branch protection rules.
-
+ 
 ![githubSecurity](/doc/images/github_branch_restrictions.JPG)
+
+
