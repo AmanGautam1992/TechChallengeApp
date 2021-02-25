@@ -12,7 +12,6 @@ The connection is not secure, as, I don't have any ssl certificate to bind.
  2. You should have an valid Azure Account
  3. You should have an Azure DevOps subscription to deploy the solution.
 
-
  ## Azure-pipeline details
 
  Multistage azure devops yaml pipeline is used to depoly the infrastructure along with the build and deployment of the techchallenge application into AKS. 
@@ -76,7 +75,7 @@ The connection is not secure, as, I don't have any ssl certificate to bind.
 
 ## Application Resiliency
 
-- AKS have the auto scaling feature that can be configured through IAC and spinning the number of pods configured through aks manifest file. For this case, update the `enable_auto_scaling=true` in `main.tf` file and update the `replicas: 2` in `aksmanifest.yaml`.
+- AKS have the auto scaling feature that can be configured through IAC. For this case, update the `enable_auto_scaling=true` under block `azurerm_kubernetes_cluster` in `main.tf` file.
 
 ![AKS pods for tech challenge AKS](/doc/images/aks_pods.JPG)
 
