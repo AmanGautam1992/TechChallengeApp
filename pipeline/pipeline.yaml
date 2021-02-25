@@ -54,6 +54,7 @@ stages:
   jobs:
   - job: 'Linux'
     displayName: BuildAppAndPublish
+    environment: build_app
     pool:
       vmImage: 'ubuntu-latest'
 
