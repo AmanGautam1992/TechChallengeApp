@@ -1,0 +1,80 @@
+name: $(SourceBranchName)_$(Date:yyyyMMdd)_$(Rev:r)
+
+trigger:
+    branches:
+        include:
+            - master
+            - feature/*
+
+pr:
+- master
+
+
+stages:
+- stage: TerraformBuild
+  displayName: 'Terraform file publish'
+
+  jobs:
+  - job: 'Linux'
+    displayName: Terraform-Build
+    pool:
+      vmImage: 'ubuntu-latest'
+
+    workspace:
+        clean: all
+
+    steps:
+     - task: PublishBuildArtifacts@1
+       displayName: 'Publish Artifact: terraform'
+       inputs:
+        PathtoPublish: iac
+        ArtifactName: terraform
+
+- stage: Infra
+  displayName: 'Infra Deployment'
+  dependsOn: TerraformBuild
+  jobs:
+  - deployment: infra_deployment
+    pool:
+      name: 'Azure Pipelines'
+      vmImage: 'vs2017-win2016'
+    environment: infra_deployment
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - template: 'deployinfra.yaml'
+            parameters:
+              tfStorageAccountRG: $(tfStorageAccountRG)
+              tfStorageAccount: $(tfStorageAccount)
+
+- stage: BuildApp
+  displayName: 'Build the app and push the image to acr'
+
+  jobs:
+  - job: 'Linux'
+    displayName: BuildAppAndPublish
+    pool:
+      vmImage: 'ubuntu-latest'
+
+    workspace:
+        clean: all
+
+    steps:
+     - template: 'build.yaml'
+
+- stage: DeployApp
+  displayName: 'App Deployment'
+  dependsOn: BuildApp
+  jobs:
+  - deployment: app_deployment
+    pool:
+      vmImage: 'ubuntu-latest'
+    environment: app_deployment
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - template: 'deployapp.yaml'
+            parameters:
+              acrname: $(techChallengeACR)

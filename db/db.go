@@ -24,6 +24,7 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
+	"strings"
 
 	"github.com/lib/pq"
 
@@ -58,6 +59,9 @@ func RebuildDb(cfg Config) error {
 
 	defer db.Close()
 
+	index := strings.LastIndex( cfg.DbUser, "@" )
+	owner := cfg.DbUser[0:index]
+
 	query := "DROP DATABASE IF EXISTS " + cfg.DbName
 
 	fmt.Println(query)
@@ -74,9 +78,8 @@ OWNER = %s
 ENCODING = 'UTF8'
 LC_COLLATE = 'en_US.utf8'
 LC_CTYPE = 'en_US.utf8'
-TABLESPACE = pg_default
 CONNECTION LIMIT = -1
-TEMPLATE template0;`, cfg.DbName, cfg.DbUser)
+TEMPLATE template0;`, cfg.DbName, owner)
 
 	fmt.Println(query)
 

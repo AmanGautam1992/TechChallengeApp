@@ -1,11 +1,11 @@
-FROM golang:alpine AS build
+ FROM golang:alpine AS build
 
-RUN apk add --no-cache curl git alpine-sdk
+ RUN apk add --no-cache curl git alpine-sdk
 
-ARG SWAGGER_UI_VERSION=3.20.9
+ ARG SWAGGER_UI_VERSION=3.20.9
 
-RUN go get -d -v github.com/go-swagger/go-swagger \
-    && cd $GOPATH/src/github.com/go-swagger/go-swagger \
+ RUN go get -v -u github.com/go-swagger/go-swagger \
+    && cd $GOPATH/pkg/mod/github.com/go-swagger/go-swagger@v0.26.1 \
     && go mod tidy \
     && go install github.com/go-swagger/go-swagger/cmd/swagger \
     && curl -sfL https://github.com/swagger-api/swagger-ui/archive/v$SWAGGER_UI_VERSION.tar.gz | tar xz -C /tmp/ \
@@ -20,7 +20,7 @@ RUN go mod tidy
 
 COPY . .
 
-RUN go build -o /TechChallengeApp
+RUN go build -o /TechChallengeApp .
 RUN swagger generate spec -o /swagger.json
 
 FROM alpine:latest
@@ -34,4 +34,4 @@ COPY --from=build /tmp/swagger/dist ./assets/swagger
 COPY --from=build /swagger.json ./assets/swagger/swagger.json
 COPY --from=build /TechChallengeApp TechChallengeApp
 
-ENTRYPOINT [ "./TechChallengeApp" ]
+ ENTRYPOINT [ "./TechChallengeApp", "serve" ]
